@@ -1,6 +1,35 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Fontisto from '@expo/vector-icons/Fontisto';
 
-export default function App() {
+const App = () => {
+
+  //Definición del useState para conteo de likes 
+  const [numberLikes, setLike] = useState(0); 
+  //Definición del useState para cambio de color icono de likes y favorites
+  const [color, setColor] = useState('black');
+  const [colorG, setColorG] = useState('black');
+
+  //Función manejador de likes
+  const handleLikes = () => {
+    //Condicionamos antes de setear el valor dentro de la función seteadora 
+    setLike(() => {
+      if(numberLikes < 10){
+        return numberLikes + 1;
+      }
+      else{
+        return numberLikes;
+      }
+    });
+    handleColor();
+  }
+  
+  //Función manejadora del cambio de color
+  const handleColor = () => {
+    setColor('red');
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTitle}>
@@ -22,8 +51,11 @@ export default function App() {
       </View>
       <View style={[styles.containerReactions, styles.margenCorazon]}>
         <View style={styles.iconReaction}>
-          <Image style={styles.imageIcon} source={require('./assets/images/corazonR.png')}/>
+          <TouchableOpacity onPress={() => handleLikes()}>
+            <Ionicons name="heart-sharp" size={29} color={color} style={styles.iconLike}/>
+          </TouchableOpacity>
         </View>
+        <Text style={styles.numbLikes}>{numberLikes}</Text>
         <View style={styles.iconReaction}>
           <Image style={styles.imageIcon} source={require('./assets/images/chat.png')}/>
         </View>
@@ -34,7 +66,9 @@ export default function App() {
           <Image style={styles.imageIcon} source={require('./assets/images/puntitos.png')}/>
         </View>
         <View style={styles.iconReaction}>
-          <Image style={styles.imageIcon} source={require('./assets/images/marcador.png')}/>
+          <TouchableOpacity onPress={() => colorG === 'black' ? setColorG('#FFD700') : setColorG('black')}>
+            <Fontisto name="favorite" size={29} color={colorG} style={styles.iconFavorite}/>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.containerAdditional}>
@@ -155,7 +189,7 @@ const styles = StyleSheet.create({
   iconMore: {
     width: '15%',
     height: '100%',
-    marginRight: '34%',
+    marginRight: '30%',
     marginLeft: '10%',
   },
   imageIcon: {
@@ -193,5 +227,17 @@ const styles = StyleSheet.create({
     width: '70%',
     height: '50%',
     resizeMode: 'contain',
+  },
+  numbLikes: {
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  iconLike: {
+    marginTop: 6,
+  },
+  iconFavorite: {
+    marginTop: 7,
   }
 });
+
+export default App;
